@@ -11,6 +11,22 @@
 
 <p align="center"><em>The example above was created with Slate. Check it out at <a href="https://slatedocs.github.io/slate">slatedocs.github.io/slate</a>.</em></p>
 
+# Generate Steps
+## Install widdershins
+```shell
+npm install widdershins -g
+```
+
+## Generate markdown by widdershins
+```shell
+ widdershins --search false --language_tabs 'go:Go' 'java:Java' 'javascript:Javascript' 'javascript--node:Node.JS' 'ruby:Ruby' --summary swagger.json -o source/index.html.md
+```
+
+## Generate api documentation by docker
+```shell
+docker run --rm --name slate -v $(pwd)/build:/srv/slate/build -v $(pwd)/source:/srv/slate/source slatedocs/slate build
+```
+
 Features
 ------------
 
