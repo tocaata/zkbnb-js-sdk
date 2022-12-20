@@ -1,0 +1,29 @@
+branches: master
+when:
+  path: "version/**"
+  event: [push, comment]
+  comment_trigger: (?mi)^/publish\s+dev\s*$
+
+pipeline:
+  build-app:
+    group: group-1
+    image: 565325940639.dkr.ecr.ap-northeast-1.amazonaws.com/dockerhub/toccata/zkbnb-widdershins-slatedocs:0.0.1-alpine
+    commands:
+    - chmod +x slate.sh
+    - widdershins --search false --language_tabs 'go:Go' 'java:Java' 'javascript:Javascript' 'javascript--node:Node.JS' 'ruby:Ruby' --summary swagger.json -o source/index.html.md
+    - ./slate.sh build
+
+  statics-to-tools:
+    tmpl: static-to-tools
+    group: group-2
+    settings:
+      app_name: zkbnb-api-docs
+      statics: build => cloud-dapp/zkbnb-api-docs
+      dir: ./
+
+  upload-static-to-qa:
+    group: group-3
+    tmpl: upload-static
+    settings:
+      bucket_name: static.devfdg.net
+      app_name: zkbnb-api-docs
